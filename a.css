@@ -1,0 +1,47 @@
+#flex-container>div {
+    box-shadow: 2px 2px 4px 3px #ccc;
+    padding: 15px 30px;
+    margin: 10px;
+    font-size: 80px;
+    background-color: #607D8B;
+    box-sizing: border-box;
+    color: #fff;
+    font-family: Helvetica;
+    display: inline-block;
+    border-radius: 15px;
+    animation-name: myfirst;
+    animation-duration: 2s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: 5;
+    animation-direction: alternate;
+    animation-play-state: running;
+}
+
+@keyframes myfirst {
+    0% {
+        background: #607D8B;
+    }
+
+    50% {
+        background: #00ff00;
+    }
+
+    100% {
+        background: #607D8B;
+    }
+}
+
+#flex-container {
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+body {
+    background-image: url('logo.jpeg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: 60%;
+}

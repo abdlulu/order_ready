@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-firestore.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="a.css">
+</head>
+
+<body>
+
+    <div id="flex-container"></div>
+
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyA19BGJc7z6n8VyD_2ivFAKdwjMiUmATq8",
+            authDomain: "order-ready-93c7f.firebaseapp.com",
+            databaseURL: "https://order-ready-93c7f-default-rtdb.firebaseio.com",
+            projectId: "order-ready-93c7f",
+            storageBucket: "order-ready-93c7f.appspot.com",
+            messagingSenderId: "786690440925",
+            appId: "1:786690440925:web:72fe4907f00c8271bbe534",
+            measurementId: "G-7FR0FB7EPQ"
+        };
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+    </script>
+
+    <script>
+        var db = firebase.firestore();
+        var orders = [];
+        var audio = new Audio('sound.m4a');
+
+        db.collection("JB").orderBy("time", "asc")
+            .onSnapshot((snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type == "added") {
+                        audio.play();
+                        orders.unshift(
+                            {
+                                id: change.doc.id,
+                                number: change.doc.data().number,
+                                time: change.doc.data().time,
+                            }
+                        );
+                        let node = document.createElement("div");
+                        document.getElementById("flex-container").prepend(node);
+                        node.innerHTML += change.doc.data().number;
+                    } else if (change.type == "removed") {
+                        var index = orders.map(function (e) { return e.id; }).indexOf(change.doc.id);
+                        orders.splice(index, 1);
+                        $('#flex-container').find("div").slice(index, index + 1).remove();
+                    }
+                });
+
+            });
+    </script>
+
+    <script>
+        window.setInterval(myTimer, 3000);
+
+        function myTimer() {
+            var vals = [];
+            orders.forEach((e) => {
+                var d = Date.now();
+                if (d - e.time >= 120000) {
+                    vals.push(e);
+                }
+            });
+
+            for (var i = vals.length - 1; i >= 0; i--) {
+                // orders.splice(i, 1);
+                // $('#flex-container').find("div").slice(i, i + 1).remove();
+                db.collection("JB").doc(vals[i].id).delete();
+            }
+
+        }
+    </script>
+
+</body>
+
+</html>
